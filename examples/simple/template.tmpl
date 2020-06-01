@@ -3,6 +3,8 @@ import base64
 import simple_pb2
 import random
 
+descriptor_source = base64.b64decode(b'{{base64 $.fileDescriptorSet }}')
+
 {{ range .file.MessageType }}
 def parse_{{ .Name }}(string_tensor):
     fields = []
@@ -13,11 +15,7 @@ def parse_{{ .Name }}(string_tensor):
     types.append({{tf_type .}})
     out_names.append("{{tf_name .}}")
 {{ end }}
-
-    descriptor_source = base64.b64decode(b'{{base64 $.fileDescriptorSet }}')
-
     _, outputs = tf.io.decode_proto(string_tensor, "{{ .Name }}", fields, types, b'bytes://' + descriptor_source)
-
 
     return {out_names[i]: outputs[i] for i in range(len(fields))}
 

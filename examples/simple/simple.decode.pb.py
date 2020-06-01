@@ -3,6 +3,8 @@ import base64
 import simple_pb2
 import random
 
+descriptor_source = base64.b64decode(b'CusCCgxzaW1wbGUucHJvdG8iYgoGU2ltcGxlEhwKCWZsb2F0dmFsMRgBIAEoAlIJZmxvYXR2YWwxEhwKCWZsb2F0dmFsMhgCIAEoAlIJZmxvYXR2YWwyEhwKCWZsb2F0dmFsMxgDIAEoAlIJZmxvYXR2YWwzQghaBnNpbXBsZUrkAQoGEgQAAAgBCggKAQwSAwAAEAoICgEIEgMCABsKCQoCCAsSAwIAGwoKCgIEABIEBAAIAQoKCgMEAAESAwQIDgoLCgQEAAIAEgMFBBgKDAoFBAACAAUSAwUECQoMCgUEAAIAARIDBQoTCgwKBQQAAgADEgMFFhcKCwoEBAACARIDBgQYCgwKBQQAAgEFEgMGBAkKDAoFBAACAQESAwYKEwoMCgUEAAIBAxIDBhYXCgsKBAQAAgISAwcEGAoMCgUEAAICBRIDBwQJCgwKBQQAAgIBEgMHChMKDAoFBAACAgMSAwcWF2IGcHJvdG8z')
+
 
 def parse_Simple(string_tensor):
     fields = []
@@ -21,11 +23,7 @@ def parse_Simple(string_tensor):
     types.append(tf.float32)
     out_names.append("floatval3")
 
-
-    descriptor_source = base64.b64decode(b'CusCCgxzaW1wbGUucHJvdG8iYgoGU2ltcGxlEhwKCWZsb2F0dmFsMRgBIAEoAlIJZmxvYXR2YWwxEhwKCWZsb2F0dmFsMhgCIAEoAlIJZmxvYXR2YWwyEhwKCWZsb2F0dmFsMxgDIAEoAlIJZmxvYXR2YWwzQghaBnNpbXBsZUrkAQoGEgQAAAgBCggKAQwSAwAAEAoICgEIEgMCABsKCQoCCAsSAwIAGwoKCgIEABIEBAAIAQoKCgMEAAESAwQIDgoLCgQEAAIAEgMFBBgKDAoFBAACAAUSAwUECQoMCgUEAAIAARIDBQoTCgwKBQQAAgADEgMFFhcKCwoEBAACARIDBgQYCgwKBQQAAgEFEgMGBAkKDAoFBAACAQESAwYKEwoMCgUEAAIBAxIDBhYXCgsKBAQAAgISAwcEGAoMCgUEAAICBRIDBwQJCgwKBQQAAgIBEgMHChMKDAoFBAACAgMSAwcWF2IGcHJvdG8z')
-
     _, outputs = tf.io.decode_proto(string_tensor, "Simple", fields, types, b'bytes://' + descriptor_source)
-
 
     return {out_names[i]: outputs[i] for i in range(len(fields))}
 
