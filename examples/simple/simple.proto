@@ -1,0 +1,9 @@
+syntax="proto3";
+
+option go_package="simple";
+
+message Simple {
+    float floatval1 = 1;
+    float floatval2 = 2;
+    float floatval3 = 3;
+}

@@ -1,0 +1,39 @@
+import tensorflow as tf
+import base64
+import simple_pb2
+import random
+
+{{ range .file.MessageType }}
+def parse_{{ .Name }}(string_tensor):
+    fields = []
+    types = []
+    out_names = []
+{{ range .Field }}
+    fields.append("{{.Name}}")
+    types.append({{tf_type .}})
+    out_names.append("{{tf_name .}}")
+{{ end }}
+
+    descriptor_source = base64.b64decode(b'{{base64 $.fileDescriptorSet }}')
+
+    _, outputs = tf.io.decode_proto(string_tensor, "{{ .Name }}", fields, types, b'bytes://' + descriptor_source)
+
+
+    return {out_names[i]: outputs[i] for i in range(len(fields))}
+
+{{ end }}
+
+def main():
+    {{ range .file.MessageType }}
+    {{ $msg := .}}
+    {{ .Name }} = simple_pb2.{{ .Name }}()
+{{ range .Field }}
+    {{ $msg.Name }}.{{.Name}} = random.random()
+{{end}}
+    val = {{ .Name }}.SerializeToString()
+    print(parse_{{ .Name }}(val))
+
+{{end}}
+
+if __name__ == "__main__":
+    main()
